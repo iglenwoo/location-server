@@ -1,39 +1,68 @@
+const _BASE_KEY = 'corvallis:users'
+const LOCATION_KEY = `${_BASE_KEY}:location`
+
+const _makeId = (userId) => {
+  return `${_BASE_KEY}:${userId.toLowerCase()}`
+}
+
 const storeLocation = async (req, res) => {
-  console.log("store location");
-  console.log("body", req.body);
-  const key = 'corvallis'
   const { userId, latitude, longitude } = req.body
   if (!userId) res.status(400).send('userId is required')
   if (!latitude) res.status(400).send('latitude is required')
   if (!longitude) res.status(400).send('longitude is required')
 
-  if (!req.db.GEOADD) {
-    console.log('! req.db.GEOADD')
-  }
+  const id = _makeId(userId)
   req.db.send_command(
     'GEOADD',
-    [ key, latitude, longitude, userId.toLowerCase()],
-    (error, reply) => {
-      if (error) {
-        console.error('error!!')
-        console.error(error)
-        res.status(500).send(error)
+    [ LOCATION_KEY, latitude, longitude, id],
+    (err, reply) => {
+      if (err) {
+        console.error('Error storeLocation!')
+        console.error('req.body:', req.body)
+        console.error('Error:', err)
+        res.status(500).send(err)
       } else {
-        console.log('succeeded!')
-        console.log(reply)
-        res.send("stored!")
+        res.status(200).send(req.body)
       }
   })
 }
 
 const getLocation = async (req, res) => {
-  console.log("get location");
-  console.log("rea.query", req.query);
   const userId = req.query.userId
   if (!userId) {
     res.status(400).send('userId is required')
   }
-  res.send(`User: ${userId}`)
+
+  const id = _makeId(userId)
+  req.db.send_command(
+    'GEOPOS',
+    [ LOCATION_KEY, id ],
+    (err, reply) => {
+    if (err) {
+      console.error('Error getLocation!')
+      console.error('userId:', userId)
+      console.error('Error:', err)
+      res.status(500).send(err)
+    } else {
+      if (!reply) {
+        res.status(404).send(`cannot find userId(${userId})`)
+      }
+      if (reply.length < 1) {
+        res.status(404).send(`location data of userId(${userId}) is empty`)
+      }
+      const location = reply[0]
+      if (location.length !== 2) {
+        res.status(404).send(`location data(${location}) of userId(${userId}) is incorrect`)
+      }
+      const longitude = location[0]
+      const latitude = location[1]
+      res.status(200).send({
+        userId: userId,
+        longitude: longitude,
+        latitude: latitude
+      })
+    }
+  })
 }
 
 module.exports = {
