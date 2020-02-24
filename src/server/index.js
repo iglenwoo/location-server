@@ -23,6 +23,12 @@ app.use(bodyParser.json())
 // NOTE: 'parsing application/x-www-form-urlencoded' is necessary.
 app.use(bodyParser.urlencoded({ extended: true }))
 
+app.use(function (req, res, next) {
+  client.debug_mode = true
+  req.db = client
+  next()
+})
+
 app.use('/', router)
 
 module.exports = app
