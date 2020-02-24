@@ -5,7 +5,7 @@ const _makeId = (userId) => {
   return `${_BASE_KEY}:${userId.toLowerCase()}`
 }
 
-const storeLocation = async (req, res) => {
+const postLocation = async (req, res) => {
   const { userId, latitude, longitude } = req.body
   if (!userId) res.status(400).send('userId is required')
   if (!latitude) res.status(400).send('latitude is required')
@@ -28,7 +28,7 @@ const storeLocation = async (req, res) => {
 }
 
 const getLocation = async (req, res) => {
-  const userId = req.query.userId
+  const userId = req.params.id
   if (!userId) {
     res.status(400).send('userId is required')
   }
@@ -65,8 +65,19 @@ const getLocation = async (req, res) => {
   })
 }
 
+const queryLocations = async (req, res) => {
+  // TODO: query locations by GEORADIUS
+  const locations = [
+    {user: '1', longitude: '1.0', latitude: '1.0'},
+    {user: '2', longitude: '2.0', latitude: '2.0'}
+  ]
+  res.status(200).send(locations)
+}
+
+
 module.exports = {
-  storeLocation,
-  getLocation
+  postLocation,
+  getLocation,
+  queryLocations
 }
 

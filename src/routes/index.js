@@ -1,8 +1,9 @@
 const router = require('express').Router()
 const location = require('./location')
 
-router.post('/location', location.storeLocation)
-router.get('/location', location.getLocation)
+router.post('/locations', location.postLocation)
+router.get('/locations/:id', location.getLocation)
+router.get('/locations', location.queryLocations)
 
 module.exports = router
 
