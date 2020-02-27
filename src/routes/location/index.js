@@ -22,7 +22,6 @@ const postLocation = async (req, res) => {
         console.error('Error:', err)
         res.status(500).send(err)
       } else {
-        console.info(reply)
         res.status(200).send(req.body)
       }
   })
@@ -74,7 +73,6 @@ const _isValidUnit = (unit) => {
 }
 
 const queryLocations = async (req, res) => {
-  console.log("rea.query", req.query);
   const { longitude, latitude, radius, unit } = req.query
   if (!longitude) res.status(400).send('longitude is required')
   if (!latitude) res.status(400).send('latitude is required')
@@ -93,7 +91,6 @@ const queryLocations = async (req, res) => {
         console.error('Error:', err)
         res.status(500).send(err)
       } else {
-        console.info('reply:', reply)
         res.status(200).send(reply)
       }
     }
