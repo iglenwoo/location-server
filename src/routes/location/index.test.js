@@ -1,9 +1,9 @@
 const supertest = require('supertest');
 const app = require('../../server');
-import { LOCATIONS_API } from '../index'
 
 const request = supertest(app)
 
+const LOCATIONS_API = '/locations'
 const mockUserId = 'user001'
 const mockUser = {
   userId: mockUserId,
@@ -20,7 +20,7 @@ it('Posts the location of a user', async done => {
 })
 
 it('Gets the location of a existing user', async done => {
-  const res = await request.get(`${BASE_API}/${mockUserId}`)
+  const res = await request.get(`${LOCATIONS_API}/${mockUserId}`)
 
   expect(res.status).toBe(200)
   expect(res.body.userId).toBe(mockUserId)
@@ -29,7 +29,7 @@ it('Gets the location of a existing user', async done => {
 
 it('Gets 404 of a not existing user', async done => {
   const mockNonUserId = 'non-user'
-  const res = await request.get(`${BASE_API}/${mockNonUserId}`)
+  const res = await request.get(`${LOCATIONS_API}/${mockNonUserId}`)
 
   expect(res.status).toBe(404)
   done()
