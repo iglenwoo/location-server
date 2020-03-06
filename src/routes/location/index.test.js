@@ -11,26 +11,28 @@ const mockUser = {
   latitude: 44.550175
 }
 
-it('Posts the location of a user', async done => {
-  const res = await request.post(LOCATIONS_API).send(mockUser)
+describe('Test /locations', () => {
+  it('Posts the location of a user', async done => {
+    const res = await request.post(LOCATIONS_API).send(mockUser)
 
-  expect(res.status).toBe(200)
-  expect(res.body).toMatchObject(mockUser)
-  done()
-})
+    expect(res.status).toBe(200)
+    expect(res.body).toMatchObject(mockUser)
+    done()
+  })
 
-it('Gets the location of a existing user', async done => {
-  const res = await request.get(`${LOCATIONS_API}/${mockUserId}`)
+  it('Gets the location of a existing user', async done => {
+    const res = await request.get(`${LOCATIONS_API}/${mockUserId}`)
 
-  expect(res.status).toBe(200)
-  expect(res.body.userId).toBe(mockUserId)
-  done()
-})
+    expect(res.status).toBe(200)
+    expect(res.body.userId).toBe(mockUserId)
+    done()
+  })
 
-it('Gets 404 of a not existing user', async done => {
-  const mockNonUserId = 'non-user'
-  const res = await request.get(`${LOCATIONS_API}/${mockNonUserId}`)
+  it('Gets 404 of a not existing user', async done => {
+    const mockNonUserId = 'non-user'
+    const res = await request.get(`${LOCATIONS_API}/${mockNonUserId}`)
 
-  expect(res.status).toBe(404)
-  done()
+    expect(res.status).toBe(404)
+    done()
+  })
 })
