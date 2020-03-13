@@ -12,12 +12,12 @@ Location service requires to store the location of the users frequently as well 
 APIs
 --------
 
-### Store a location of a user.
+### 1. Store a location of a user.
 ```text
 POST /locations
 ```
 Body
-```json
+```text
 {
   "userId": [string],
   "longitude": [float],
@@ -25,12 +25,12 @@ Body
 }
 ```
 
-### Get a location of a user.
+### 2. Get a location of a user.
 ```text
 GET /locations/:userId
 ```
 
-### Get the locations within given geolocation and radius.
+### 3. Get the locations within given geolocation and radius.
 ```text
 GET /locations?longitude=[float]&latitude=[float]&radius=[number]&unit=['m'|'km'|'mi'|'ft']
 ```
