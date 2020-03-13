@@ -1,5 +1,6 @@
 const supertest = require('supertest');
 const app = require('../../server');
+const redis = require('../../server/redis')
 
 const request = supertest(app)
 
@@ -34,5 +35,10 @@ describe('Test /locations', () => {
 
     expect(res.status).toBe(404)
     done()
+  })
+
+  afterAll(() => {
+    redis.flushall()
+    redis.quit()
   })
 })

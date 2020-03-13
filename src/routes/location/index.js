@@ -1,3 +1,5 @@
+const db = require('../../server/redis')
+
 const _BASE_KEY = 'corvallis:users'
 const LOCATION_KEY = `${_BASE_KEY}:location`
 
@@ -12,7 +14,7 @@ const postLocation = async (req, res) => {
   if (!latitude) return res.status(400).send('latitude is required')
 
   const id = _makeId(userId)
-  req.db.send_command(
+  db.send_command(
     'GEOADD',
     [ LOCATION_KEY, longitude, latitude, id],
     (err, reply) => {
@@ -32,7 +34,7 @@ const getLocation = async (req, res) => {
   if (!userId) return res.status(400).send('userId is required')
 
   const id = _makeId(userId)
-  req.db.send_command(
+  db.send_command(
     'GEOPOS',
     [ LOCATION_KEY, id ],
     (err, reply) => {
@@ -80,7 +82,7 @@ const queryLocations = async (req, res) => {
   if (!_isValidUnit(unit)) return res.status(400).send(
     `unit (${unit})is invalid, valid units are 'm' | 'km' | 'mi' | 'ft'`)
 
-  req.db.send_command(
+  db.send_command(
     'GEORADIUS',
     [ LOCATION_KEY, longitude, latitude, radius, unit],
     (err, reply) => {
