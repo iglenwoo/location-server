@@ -18,26 +18,21 @@ const unit = 'ft'
 const buildUrl = ({ longitude, latitude, radius}) => {
   return `${LOCATIONS_API}?longitude=${longitude}&latitude=${latitude}&radius=${radius}&unit=${unit}`
 }
+// NOTE: This is an alternative for CircleCI failing with beforeAll
+const postLocations = async () => {
+  for (const loc of mockLocations) {
+    await request.post(LOCATIONS_API).send({
+      userId: loc.userId,
+      longitude: loc.longitude,
+      latitude: loc.latitude
+    })
+  }
+}
+
 
 describe('Test /locations', () => {
-  // beforeAll(async () => {
-  //   for (const loc of mockLocations) {
-  //     await request.post(LOCATIONS_API).send({
-  //       userId: loc.userId,
-  //       longitude: loc.longitude,
-  //       latitude: loc.latitude
-  //     })
-  //   }
-  // })
-
   it('returns no location', async done => {
-    for (const loc of mockLocations) {
-      await request.post(LOCATIONS_API).send({
-        userId: loc.userId,
-        longitude: loc.longitude,
-        latitude: loc.latitude
-      })
-    }
+    await postLocations()
 
     const url = buildUrl({longitude: mockParam.longitude, latitude: mockParam.latitude, radius: 400})
     const res = await request.get(url)
@@ -49,13 +44,7 @@ describe('Test /locations', () => {
   })
 
   it('returns one location', async done => {
-    for (const loc of mockLocations) {
-      await request.post(LOCATIONS_API).send({
-        userId: loc.userId,
-        longitude: loc.longitude,
-        latitude: loc.latitude
-      })
-    }
+    await postLocations()
 
     const url = buildUrl({longitude: mockParam.longitude, latitude: mockParam.latitude, radius: 500})
     const res = await request.get(url)
@@ -71,13 +60,7 @@ describe('Test /locations', () => {
   })
 
   it('returns 3 locations', async done => {
-    for (const loc of mockLocations) {
-      await request.post(LOCATIONS_API).send({
-        userId: loc.userId,
-        longitude: loc.longitude,
-        latitude: loc.latitude
-      })
-    }
+    await postLocations()
 
     const url = buildUrl({longitude: mockParam.longitude, latitude: mockParam.latitude, radius: 1100})
     const res = await request.get(url)
