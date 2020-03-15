@@ -1,6 +1,6 @@
 const db = require('../../server/redis')
 
-const _BASE_KEY = 'corvallis:users'
+const _BASE_KEY = 'users'
 const LOCATION_KEY = `${_BASE_KEY}:location`
 
 const _makeId = (userId) => {

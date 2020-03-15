@@ -18,6 +18,7 @@ describe('Test /locations', () => {
 
     expect(res.status).toBe(200)
     expect(res.body).toMatchObject(mockUser)
+
     done()
   })
 
@@ -26,6 +27,7 @@ describe('Test /locations', () => {
 
     expect(res.status).toBe(200)
     expect(res.body.userId).toBe(mockUserId)
+
     done()
   })
 
@@ -34,6 +36,7 @@ describe('Test /locations', () => {
     const res = await request.get(`${LOCATIONS_API}/${mockNonUserId}`)
 
     expect(res.status).toBe(404)
+
     done()
   })
 
