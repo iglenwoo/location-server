@@ -20,7 +20,17 @@ const buildUrl = ({ longitude, latitude, radius}) => {
 }
 
 describe('Test /locations', () => {
-  beforeAll(async () => {
+  // beforeAll(async () => {
+  //   for (const loc of mockLocations) {
+  //     await request.post(LOCATIONS_API).send({
+  //       userId: loc.userId,
+  //       longitude: loc.longitude,
+  //       latitude: loc.latitude
+  //     })
+  //   }
+  // })
+
+  it('returns no location', async done => {
     for (const loc of mockLocations) {
       await request.post(LOCATIONS_API).send({
         userId: loc.userId,
@@ -28,9 +38,7 @@ describe('Test /locations', () => {
         latitude: loc.latitude
       })
     }
-  })
 
-  it('returns no location', async done => {
     const url = buildUrl({longitude: mockParam.longitude, latitude: mockParam.latitude, radius: 400})
     const res = await request.get(url)
 
@@ -41,6 +49,14 @@ describe('Test /locations', () => {
   })
 
   it('returns one location', async done => {
+    for (const loc of mockLocations) {
+      await request.post(LOCATIONS_API).send({
+        userId: loc.userId,
+        longitude: loc.longitude,
+        latitude: loc.latitude
+      })
+    }
+
     const url = buildUrl({longitude: mockParam.longitude, latitude: mockParam.latitude, radius: 500})
     const res = await request.get(url)
 
@@ -55,6 +71,14 @@ describe('Test /locations', () => {
   })
 
   it('returns 3 locations', async done => {
+    for (const loc of mockLocations) {
+      await request.post(LOCATIONS_API).send({
+        userId: loc.userId,
+        longitude: loc.longitude,
+        latitude: loc.latitude
+      })
+    }
+
     const url = buildUrl({longitude: mockParam.longitude, latitude: mockParam.latitude, radius: 1100})
     const res = await request.get(url)
 
@@ -62,6 +86,10 @@ describe('Test /locations', () => {
     expect(res.body.length).toBe(3)
 
     done()
+  })
+
+  afterEach(() => {
+    redis.flushall()
   })
 
   afterAll(() => {
